@@ -1049,7 +1049,10 @@ function importData(file) {
 
 // ── Theme ──
 function applyTheme() {
-  document.documentElement.setAttribute('data-theme', state.theme);
+  var light = state.theme === 'light';
+  document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', light ? '#f0f0f5' : '#111114');
 }
 
 // ── Init ──
