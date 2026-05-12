@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111114">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Gym Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <nav id="tabs">
+      <button class="tab active" data-tab="today">Today</button>
+      <button class="tab" data-tab="program">Program</button>
+      <button class="tab" data-tab="history">History</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <!-- Today -->
+    <main id="view-today" class="view active">
+      <div id="today-nav"></div>
+      <div id="today-session"></div>
+    </main>
+
+    <!-- Program reference -->
+    <main id="view-program" class="view">
+      <div id="program-phase-nav"></div>
+      <div id="program-body"></div>
+    </main>
+
+    <!-- History -->
+    <main id="view-history" class="view">
+      <div id="history-body"></div>
+    </main>
+
+    <!-- Settings -->
+    <main id="view-settings" class="view">
+      <h2>Progress</h2>
+      <div id="settings-progress"></div>
+      <button id="btn-reset-progress" class="btn-danger">Reset All Progress</button>
+
+      <hr>
+      <h2>Appearance</h2>
+      <div class="toggle-row">
+        <span>Light theme</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="theme-toggle">
+          <span class="toggle-knob"></span>
+        </label>
+      </div>
+
+      <hr>
+      <h2>App</h2>
+      <button id="btn-update" class="btn-secondary">Check for Updates</button>
+      <div id="update-status" class="update-status hidden"></div>
+
+      <hr>
+      <h2>Data</h2>
+      <button id="btn-export" class="btn-secondary">Export Data</button>
+      <button id="btn-import" class="btn-secondary">Import Data</button>
+      <input type="file" id="import-file" accept=".json" class="hidden">
+    </main>
+
+  </div>
+
+  <!-- Edit exercise modal -->
+  <div id="modal-edit-ex" class="modal hidden">
+    <div class="modal-sheet">
+      <h3>Edit Exercise</h3>
+      <label>Name</label>
+      <input type="text" id="edit-ex-name" placeholder="Exercise name" autocomplete="off">
+      <label>Warm-up sets</label>
+      <input type="number" id="edit-ex-warmup" min="0" max="10" placeholder="0">
+      <label>Coach notes (optional)</label>
+      <textarea id="edit-ex-notes" rows="3" placeholder="Any notes for this exercise…"></textarea>
+      <div class="modal-actions">
+        <button id="btn-edit-ex-save" class="btn-primary">Save</button>
+        <button id="btn-edit-ex-reset" class="btn-secondary">Reset name</button>
+        <button id="btn-edit-ex-cancel" class="btn-secondary">Cancel</button>
+      </div>
+      <button id="btn-edit-ex-remove" class="btn-remove-ex">Remove exercise from session</button>
+    </div>
+  </div>
+
+  <!-- Add exercise modal -->
+  <div id="modal-add-ex" class="modal hidden">
+    <div class="modal-sheet">
+      <h3>Add Exercise</h3>
+      <label>Name *</label>
+      <input type="text" id="add-ex-name" placeholder="e.g. Cable Curl" autocomplete="off">
+      <label>Warm-up sets</label>
+      <input type="number" id="add-ex-warmup" min="0" max="10" value="0" placeholder="0">
+      <label>Working sets</label>
+      <input type="number" id="add-ex-sets" min="1" max="20" value="3" placeholder="3">
+      <label>Target reps</label>
+      <input type="text" id="add-ex-reps" placeholder="e.g. 8–12">
+      <label>RPE</label>
+      <input type="text" id="add-ex-rpe" placeholder="e.g. 8–9">
+      <label>Rest</label>
+      <input type="text" id="add-ex-rest" value="~2–3 min" placeholder="e.g. ~2–3 min">
+      <div class="modal-actions">
+        <button id="btn-add-ex-save" class="btn-primary">Add</button>
+        <button id="btn-add-ex-cancel" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm modal -->
+  <div id="modal-confirm" class="modal hidden">
+    <div class="modal-sheet">
+      <h3 id="confirm-title">Confirm</h3>
+      <p id="confirm-msg" style="color:var(--text-mid);font-size:14px;margin:0 0 16px;"></p>
+      <div class="modal-actions">
+        <button id="btn-confirm-ok" class="btn-danger">Confirm</button>
+        <button id="btn-confirm-cancel" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
