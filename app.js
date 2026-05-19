@@ -2,8 +2,8 @@
 // Gym Tracker — Jeff Nippard Ultimate Push Pull Legs System
 // ============================================================
 // Program: 3 phases (Hypertrophy 6w, Maximum Effort 4w, Supercompensation 3w)
-// 4 days/week: Legs, Push, Pull, Full Body
-// Data encoded from PDF: warm-up set counts + working set prescriptions
+// 5 days/week: Push, Pull, Legs, Upper, Lower
+// All 3 phases fully encoded from PDFs.
 // ============================================================
 
 // ── Exercise builder helpers ──
@@ -26,24 +26,24 @@ var P1_DEAD_REPS   = { 1:'5',   2:'4',   3:'3',   4:'2',   5:'1'   };
 function p1Legs(week) {
   var sqReps = P1_SQUAT_REPS[week];
   return [
-    ex('Back Squat', 4, [w(1, sqReps, '8–9', '~3–4 min')],
+    ex('Squat', 4, [w(1, sqReps, '8–9', '~3–4 min')],
       ['Hack Squat', 'DB Bulgarian Split Squat'],
       'Sit back and down, keep upper back tight to bar.'),
     ex('Pause Squat (Back-off)', 0, [w(2, '5', '8–9', '~3–4 min')],
       ['Pause Hack Squat', 'Pause DB Bulgarian Split Squat'],
       'Drop ~25% from top set. 2-second pause at bottom.'),
-    ex('Dumbbell RDL', 2, [w(3, '8–10', '8–9', '~2–3 min')],
-      ['Barbell RDL', '45° Hyperextension'],
-      'Neutral lower back, hips back, don\'t round spine.'),
-    ex('Reverse Lunge', 1, [w(2, '10/leg', '8–9', '~2–3 min')],
+    ex('Barbell RDL', 2, [w(3, '8–10', '8–9', '~2–3 min')],
+      ['DB RDL', '45° Hyperextension'],
+      'Neutral lower back, set hips back, don\'t round spine.'),
+    ex('Walking Lunge', 1, [w(2, '10', '8–9', '~2–3 min')],
       ['DB Step-Up', 'Goblet Squat'],
-      'Medium strides, minimize push-off from rear leg.'),
+      'Take medium strides, minimize push-off from rear leg.'),
     ex('Seated Leg Curl', 1, [w(3, '10–12', '9–10', '~1–2 min')],
       ['Lying Leg Curl', 'Nordic Ham Curl'],
       'Squeeze hamstrings to move the weight.'),
-    ex('Standing Calf Raise', 1, [w(4, '10–12', '9–10', '~1–2 min')],
-      ['Seated Calf Raise', 'Leg Press Toe Press'],
-      'Press all the way up, stretch calves at bottom, no bounce.'),
+    ex('Leg Press Toe Press', 1, [w(4, '10–12', '9–10', '~1–2 min')],
+      ['Seated Calf Raise', 'Standing Calf Raise'],
+      'Press all the way up to your toes, stretch calves at bottom, no bounce.'),
     ex('Decline Plate-Weighted Crunch', 1, [w(3, '10–12', '9–10', '~1–2 min')],
       ['Cable Crunch', 'Machine Crunch'],
       'Hold plate to chest, crunch hard.')
@@ -108,44 +108,58 @@ function p1Pull(week) {
   ];
 }
 
-function p1FullBody(week) {
+function p1Upper(week) {
+  return [
+    ex('Pull-Up', 2, [w(2, '8–10', '8–9', '~2–3 min')],
+      ['Lat Pulldown', 'Machine Pulldown'],
+      '1.5x shoulder-width grip, pull chest to bar.'),
+    ex('Close-Grip Barbell Incline Press', 3, [w(3, '8, 5, 12', '8–9', '~3–4 min')],
+      ['Close-Grip DB Incline Press', 'Close-Grip Machine Press'],
+      '~45° incline, grip just outside shoulder width.'),
+    ex('Kroc Row', 2, [w(3, '10–12', '8–9', '~2–3 min')],
+      ['Single-Arm DB Row', 'Meadows Row'],
+      'DB row with mild cheating, slightly more upright posture. Use straps if grip is limiting.'),
+    ex('Eccentric-Accentuated + Constant-Tension Cable Lateral Raise', 1, [w(3, '5, 15', '9–10', '~1–2 min')],
+      ['DB Lateral Raise', 'Machine Lateral Raise'],
+      'First 5 reps: 5-second lowering phase. Last 15 reps: constant tension (no pausing at top or bottom).'),
+    ex('N1-Style Cross-Body Bicep Curl', 1, [w(3, '10–12', '9–10', '~1–2 min')],
+      ['DB Incline Curl', 'DB Curl'],
+      'Curl across your body with arm out to the side at ~60°.'),
+    ex('Diamond Push-Up', 0, [w(1, 'AMRAP', '10', '0 min')],
+      ['Close-Grip Push-Up', 'Kneeling Modified Push-Up'],
+      'Hands close together forming a diamond shape, smooth tempo.')
+  ];
+}
+
+function p1Lower(week) {
   var dReps = P1_DEAD_REPS[week];
   return [
     ex('Deadlift', 4, [w(1, dReps, '8–9', '~3–5 min')],
       ['Trap Bar Deadlift', 'Barbell Hip Thrust'],
-      'Brace lats, chest tall, pull the slack out of bar before lifting.'),
+      'Brace lats, chest tall, pull the slack out of the bar before lifting.'),
     ex('Stiff-Leg Deadlift', 0, [w(2, '8', '8–9', '~3–4 min')],
       ['Barbell RDL', 'DB RDL'],
-      'High-hip conventional deadlift with slight knee bend.'),
-    ex('Close-Grip Barbell Incline Press', 3, [w(3, '8, 5, 12', '8–9', '~3–4 min')],
-      ['Close-Grip DB Incline Press', 'Close-Grip Machine Press'],
-      '~45° incline, grip just outside shoulder width.'),
-    ex('Chin-Up', 2, [w(2, '8–10', '8–9', '~2–3 min')],
-      ['Underhand Lat Pulldown', 'Pull-Up'],
-      'Underhand grip, pull chest to bar, add weight if needed.'),
-    ex('Leg Press', 3, [w(3, '10–12', '8–9', '~2–3 min')],
-      ['Goblet Squat', 'Reverse Lunge'],
-      'Medium-width feet, don\'t let lower back round.'),
-    ex('Kroc Row', 2, [w(2, '10–12', '8–9', '~2–3 min')],
-      ['Single-Arm DB Row', 'Meadows Row'],
-      'Mild cheating, slightly more upright posture. Use straps if needed.'),
-    ex('Diamond Push-Up', 0, [w(1, 'AMRAP', '10', '0 min')],
-      ['Close-Grip Push-Up', 'Kneeling Modified Push-Up'],
-      'Hands close together forming diamond, smooth tempo.')
+      'High-hip conventional deadlift with a slight bend in the knees.'),
+    ex('Leg Press', 3, [w(4, '10–12', '8–9', '~2–3 min')],
+      ['Goblet Squat', 'Walking Lunge'],
+      'Medium-width feet placement on the platform, don\'t let lower back round.'),
+    ex('Glute Ham Raise', 1, [w(3, '8–10', '9–10', '~1–2 min')],
+      ['Nordic Ham Curl', 'Lying Leg Curl'],
+      'Keep hips straight. Use Nordic ham curls if no GHR machine.'),
+    ex('Slow-Eccentric Leg Extension', 1, [w(3, '8–10', '9–10', '~1–2 min')],
+      ['DB Step-Up', 'Goblet Squat'],
+      'Control the weight with a 3–4 second negative.'),
+    ex('Seated Calf Raise', 1, [w(4, '15–20', '9–10', '~1–2 min')],
+      ['Standing Calf Raise', 'Leg Press Toe Press'],
+      'Full range, stretch at bottom, no bounce.'),
+    ex('Roman Chair Leg Raise', 1, [w(3, '10–20', '9–10', '~1–2 min')],
+      ['Hanging Leg Raise', 'Reverse Crunch'],
+      'Don\'t swing legs at bottom — minimize momentum. Tuck knees toward chest if straight legs are too challenging.')
   ];
 }
 
 // Phase 1 Week 6 — Semi-Deload
 var P1_W6 = {
-  Legs: [
-    ex('Back Squat', 4, [w(1, '1–3', '7', '~3–4 min')], ['Hack Squat', 'DB Bulgarian Split Squat'], 'Semi-deload — stay light.'),
-    ex('Pause Squat (Back-off)', 0, [w(2, '5', '7', '~3–4 min')], ['Pause Hack Squat', 'Pause DB Bulgarian Split Squat'], '2-second pause.'),
-    ex('Dumbbell RDL', 2, [w(2, '8–10', '7', '~2–3 min')], ['Barbell RDL', '45° Hyperextension']),
-    ex('Reverse Lunge', 1, [w(2, '10/leg', '7', '~2–3 min')], ['DB Step-Up', 'Goblet Squat']),
-    ex('Seated Leg Curl', 1, [w(2, '10–12', '8', '~1–2 min')], ['Lying Leg Curl', 'Nordic Ham Curl']),
-    ex('Standing Calf Raise', 1, [w(2, '10–12', '8', '~1–2 min')], ['Seated Calf Raise', 'Leg Press Toe Press']),
-    ex('Decline Plate-Weighted Crunch', 1, [w(2, '10–12', '8', '~1–2 min')], ['Cable Crunch', 'Machine Crunch'])
-  ],
   Push: [
     ex('DB Bench Press', 4, [w(1, '3–5', '7', '~3–4 min')], ['Bench Press', 'Machine Chest Press']),
     ex('DB Bench Press (No Leg Drive)', 0, [w(2, '10', '7', '~3–4 min')], ['DB Bench (No Leg Drive)', 'Machine (No Leg Drive)']),
@@ -166,117 +180,145 @@ var P1_W6 = {
     ex('EZ-Bar Curl', 1, [w(2, '6–8', '8', '~1–2 min')], ['DB Curl', 'Cable Curl']),
     ex('Bottom-Half Preacher Curl', 0, [w(2, '10–12', '8', '~1–2 min')], ['Bottom-Half Spider Curl', 'Bottom-Half Bayesian Curl'])
   ],
-  'Full Body': [
+  Legs: [
+    ex('Squat', 4, [w(1, '1–3', '7', '~3–4 min')], ['Hack Squat', 'DB Bulgarian Split Squat'], 'Semi-deload — stay light.'),
+    ex('Pause Squat (Back-off)', 0, [w(2, '5', '7', '~3–4 min')], ['Pause Hack Squat', 'Pause DB Bulgarian Split Squat'], '2-second pause.'),
+    ex('Barbell RDL', 2, [w(2, '8–10', '7', '~2–3 min')], ['DB RDL', '45° Hyperextension']),
+    ex('Walking Lunge', 1, [w(2, '10', '7', '~2–3 min')], ['DB Step-Up', 'Goblet Squat']),
+    ex('Seated Leg Curl', 1, [w(2, '10–12', '8', '~1–2 min')], ['Lying Leg Curl', 'Nordic Ham Curl']),
+    ex('Leg Press Toe Press', 1, [w(2, '10–12', '8', '~1–2 min')], ['Seated Calf Raise', 'Standing Calf Raise']),
+    ex('Decline Plate-Weighted Crunch', 1, [w(2, '10–12', '8', '~1–2 min')], ['Cable Crunch', 'Machine Crunch'])
+  ],
+  Upper: [
+    ex('Pull-Up', 2, [w(2, '8–10', '7', '~2–3 min')], ['Lat Pulldown', 'Machine Pulldown']),
+    ex('Close-Grip Barbell Incline Press', 3, [w(2, '8, 5', '7', '~3–4 min')], ['Close-Grip DB Incline Press', 'Close-Grip Machine Press']),
+    ex('Kroc Row', 2, [w(2, '10–12', '7', '~2–3 min')], ['Single-Arm DB Row', 'Meadows Row']),
+    ex('Eccentric-Accentuated + Constant-Tension Cable Lateral Raise', 1, [w(2, '5, 15', '8', '~1–2 min')], ['DB Lateral Raise', 'Machine Lateral Raise']),
+    ex('N1-Style Cross-Body Bicep Curl', 1, [w(2, '10–12', '8', '~1–2 min')], ['DB Incline Curl', 'DB Curl']),
+    ex('Diamond Push-Up', 0, [w(1, 'AMRAP', '10', '0 min')], ['Close-Grip Push-Up', 'Kneeling Modified Push-Up'])
+  ],
+  Lower: [
     ex('Deadlift', 4, [w(1, '4', '7', '~3–5 min')], ['Trap Bar Deadlift', 'Barbell Hip Thrust'], 'Semi-deload.'),
     ex('Stiff-Leg Deadlift', 0, [w(2, '8', '7', '~3–4 min')], ['Barbell RDL', 'DB RDL']),
-    ex('Close-Grip Barbell Incline Press', 3, [w(2, '8, 5', '7', '~3–4 min')], ['Close-Grip DB Incline Press', 'Close-Grip Machine Press']),
-    ex('Chin-Up', 2, [w(2, '8–10', '7', '~2–3 min')], ['Underhand Lat Pulldown', 'Pull-Up']),
-    ex('Leg Press', 3, [w(2, '10–12', '7', '~2–3 min')], ['Goblet Squat', 'Reverse Lunge']),
-    ex('Kroc Row', 2, [w(2, '10–12', '7', '~2–3 min')], ['Single-Arm DB Row', 'Meadows Row']),
-    ex('Diamond Push-Up', 0, [w(1, 'AMRAP', '10', '0 min')], ['Close-Grip Push-Up', 'Kneeling Modified Push-Up'])
+    ex('Leg Press', 3, [w(2, '10–12', '7', '~2–3 min')], ['Goblet Squat', 'Walking Lunge']),
+    ex('Glute Ham Raise', 1, [w(2, '8–10', '8', '~1–2 min')], ['Nordic Ham Curl', 'Lying Leg Curl']),
+    ex('Slow-Eccentric Leg Extension', 1, [w(2, '8–10', '8', '~1–2 min')], ['DB Step-Up', 'Goblet Squat']),
+    ex('Seated Calf Raise', 1, [w(2, '15–20', '8', '~1–2 min')], ['Standing Calf Raise', 'Leg Press Toe Press']),
+    ex('Roman Chair Leg Raise', 1, [w(2, '10–20', '8', '~1–2 min')], ['Hanging Leg Raise', 'Reverse Crunch'])
   ]
 };
 
-// ── Phase 2 — Maximum Effort (4 weeks, identical each week) ──
-// Full Body alternates: odd weeks = Hack Squat, even weeks = Deadlift
-
-var P2_LEGS = [
-  ex('Squat or Machine Squat', 4, [w(1, '3–5', '8–9', '~3–5 min')],
-    ['Machine Squat', 'Bulgarian Split Squat'],
-    'Sit back and down, keep upper back tight to bar.'),
-  ex('Dumbbell RDL', 3, [w(2, '4–6', '10', '~3–4 min')],
-    ['Barbell RDL', '45° Hyperextension'],
-    'Neutral lower back, hips back.'),
-  ex('Leg Extension', 2, [w(2, '6–8', '10', '~2–3 min')],
-    ['DB Step-Up', 'Goblet Squat'],
-    'Squeeze quads to move the weight.'),
-  ex('Seated Calf Raise', 2, [w(3, '4–6', '10', '~2–3 min')],
-    ['Standing Calf Raise', 'Leg Press Toe Press'],
-    'Full stretch at bottom, no bounce.'),
-  ex('Cable Crunch', 2, [w(3, '6–8', '10', '~2–3 min')],
-    ['Plate-Weighted Crunch', 'Machine Crunch'],
-    'Round your back as you crunch.')
-];
+// ── Phase 2 — Maximum Effort (4 weeks) ──
+// Push/Pull/Legs/Upper are identical W1–W4. Lower alternates primary lift: Hack Squat odd weeks, Deadlift even weeks.
 
 var P2_PUSH = [
-  ex('DB Bench Press', 4, [w(1, '3–5', '8–9', '~3–5 min')],
-    ['Bench Press', 'Machine Chest Press'],
-    'Comfortable arch, quick pause on chest.'),
+  ex('Bench Press', 4, [w(1, '3–5', '8–9', '~3–5 min')],
+    ['DB Bench Press', 'Machine Chest Press'],
+    'Set up a comfortable arch, quick pause on the chest and explode up on each rep.'),
   ex('High-Incline Smith Machine Press', 2, [w(2, '4–6', '10', '~3–4 min')],
     ['Incline DB Press', 'Incline Machine Press'],
-    '45–60° incline, touch bar to upper chest with control.'),
-  ex('Egyptian Cable Lateral Raise', 2, [w(2, '6–8', '10', '~2–3 min')],
+    'Set the bench at a 45–60° incline, touch the bar to your upper chest with control.'),
+  ex('Egyptian Cable Lateral Raise', 2, [w(3, '6–8', '10', '~2–3 min')],
     ['DB Lateral Raise', 'Machine Lateral Raise'],
-    'Lean away from cable. Squeeze delts.'),
+    'Lean away from the cable. Focus on squeezing your delts.'),
   ex('Overhead Cable Triceps Extension', 2, [w(2, '4–6', '10', '~2–3 min')],
     ['DB Floor Skull Crusher', 'DB French Press'],
-    'Both arms at once, resist the negative.'),
+    'Do both arms at once, resist the negative.'),
   ex('Cable Triceps Kickback', 1, [w(2, '6–8', '10', '~2–3 min')],
     ['DB Triceps Kickback', 'Triceps Pressdown'],
-    'Lean slightly forward, lock elbow behind torso.')
+    'Lean slightly forward, lock your elbow behind your torso (shoulder hyperextension).')
 ];
 
 var P2_PULL = [
   ex('Neutral-Grip Lat Pulldown', 3, [w(3, '4–6', '10', '~3–4 min')],
     ['Neutral-Grip Pull-Up', 'Machine Pulldown'],
-    'Pull elbows down against sides.'),
+    'Pull your elbows down against your sides.'),
   ex('Pendlay Row', 3, [w(2, '4–6', '10', '~3–4 min')],
     ['Meadows Row', 'Single-Arm Row'],
-    'Squeeze shoulder blades, pull to lower chest, no momentum.'),
+    'Initiate by squeezing shoulder blades together, pull to your lower chest, avoid momentum.'),
   ex('Reverse Pec Deck', 2, [w(2, '6–8', '10', '~2–3 min')],
     ['Reverse Cable Flye', 'Bent-Over Reverse DB Flye'],
-    'Swing weight "out", not "back".'),
+    'Swing the weight "out", not "back".'),
   ex('EZ-Bar Curl', 2, [w(2, '4–6', '10', '~2–3 min')],
     ['DB Curl', 'Cable Curl'],
-    'Arc bar "out" not "up", squeeze biceps.'),
+    'Arc the bar "out" not "up", focus on squeezing your biceps.'),
   ex('Hammer Cheat Curl', 1, [w(1, '4–6', '10', '0 min')],
     ['Inverse Zottman Curl', 'DB Curl'],
-    'Slight momentum on concentric, control eccentric with elbows stationary.')
+    'Slight momentum on the concentric, but control the eccentric with elbows stationary.')
 ];
 
-// P2 Full Body — Hack Squat version (weeks 1 & 3)
-var P2_FB_A = [
-  ex('Hack Squat', 4, [w(2, '4–6', '9–10', '~3–5 min')],
+var P2_LEGS = [
+  ex('Squat or Machine Squat', 4, [w(1, '3–5', '8–9', '~3–5 min')],
     ['Machine Squat', 'Bulgarian Split Squat'],
-    'Knees forward past toes, focus tension on quads.'),
-  ex('Seated DB Shoulder Press', 3, [w(2, '6–8', '10', '~3–4 min'), w(2, '4–6', '10', '~3–4 min')],
-    ['Machine Shoulder Press', 'Standing DB Arnold Press'],
-    'Bring DBs all the way down, torso upright.'),
-  ex('Close-Grip Seated Cable Row', 3, [w(2, '4–6', '10', '~3–4 min')],
-    ['T-Bar Row', 'Incline CS DB Row'],
-    'Squeeze shoulder blades together, drive elbows down and back.'),
-  ex('Weighted Dip', 3, [w(2, '4–6', '10', '~3–4 min')],
-    ['Machine Chest Press', 'DB Bench Press'],
-    'Elbows 45°, torso forward 15°, shoulder-width or slightly wider grip.'),
-  ex('Seated Leg Curl', 2, [w(2, '4–6', '10', '~2–3 min')],
-    ['Lying Leg Curl', 'Nordic Ham Curl'],
-    'Squeeze hamstrings to move the weight.'),
-  ex('Machine Lateral Raise', 2, [w(2, '6–8', '10', '~2–3 min')],
-    ['DB Lateral Raise', 'Cable Lateral Raise'],
-    'Squeeze lateral delt to move the weight.')
+    'Sit back and down, keep your upper back tight to the bar.'),
+  ex('Barbell RDL', 3, [w(2, '4–6', '10', '~3–4 min')],
+    ['DB RDL', '45° Hyperextension'],
+    'Maintain a neutral lower back, set your hips back, don\'t allow your spine to round.'),
+  ex('Leg Extension', 2, [w(2, '6–8', '10', '~2–3 min')],
+    ['DB Step-Up', 'Goblet Squat'],
+    'Focus on squeezing your quads to make the weight move.'),
+  ex('Seated Calf Raise', 2, [w(2, '4–6', '10', '~2–3 min')],
+    ['Standing Calf Raise', 'Leg Press Toe Press'],
+    'Press all the way up to your toes, stretch your calves at the bottom, no bounce.'),
+  ex('Cable Crunch', 2, [w(2, '6–8', '10', '~2–3 min')],
+    ['Plate-Weighted Crunch', 'Machine Crunch'],
+    'Round your back as you crunch.')
 ];
 
-// P2 Full Body — Deadlift version (weeks 2 & 4)
-var P2_FB_B = [
-  ex('Deadlift', 4, [w(2, '4–6', '8–9', '~3–5 min')],
-    ['Trap Bar Deadlift', 'Barbell Hip Thrust'],
-    'Can pull sumo or conventional, whichever you\'re stronger at.'),
-  ex('Seated DB Shoulder Press', 3, [w(2, '6–8', '10', '~3–4 min'), w(2, '4–6', '10', '~3–4 min')],
+var P2_UPPER = [
+  ex('Wide-Grip Pull-Up', 3, [w(2, '4–6', '10', '~3–4 min')],
+    ['Wide-Grip Lat Pulldown', 'Machine Pulldown'],
+    'Use ~1.5x shoulder-width grip. Add weight or use assistance as needed to hit RPE. Keep form as consistent as possible.'),
+  ex('Seated DB Shoulder Press', 3, [w(2, '6–8', '10', '~3–4 min')],
     ['Machine Shoulder Press', 'Standing DB Arnold Press'],
-    'Bring DBs all the way down, torso upright.'),
-  ex('Close-Grip Seated Cable Row', 3, [w(2, '4–6', '10', '~3–4 min')],
-    ['T-Bar Row', 'Incline CS DB Row'],
-    'Squeeze shoulder blades, drive elbows down and back.'),
+    'Bring the dumbbells all the way down, keep your torso upright.'),
+  ex('Close-Grip Seated Cable Row', 3, [w(1, '4–6', '10', '~3–4 min')],
+    ['T-Bar Row', 'Incline Chest-Supported DB Row'],
+    'Squeeze shoulder blades together, drive your elbows down and back.'),
   ex('Weighted Dip', 3, [w(2, '4–6', '10', '~3–4 min')],
     ['Machine Chest Press', 'DB Bench Press'],
-    'Elbows 45°, torso forward 15°, shoulder-width grip.'),
-  ex('Seated Leg Curl', 2, [w(2, '4–6', '10', '~2–3 min')],
-    ['Lying Leg Curl', 'Nordic Ham Curl'],
-    'Squeeze hamstrings.'),
+    'Tuck elbows at 45°, lean torso forward 15°, shoulder-width or slightly wider grip.'),
   ex('Machine Lateral Raise', 2, [w(2, '6–8', '10', '~2–3 min')],
     ['DB Lateral Raise', 'Cable Lateral Raise'],
-    'Squeeze lateral delt.')
+    'Focus on squeezing your lateral delt to move the weight.'),
+  ex('Alternating DB Curl', 2, [w(1, '4–6', '10', '~2–3 min')],
+    ['EZ Bar Curl', 'Cable Curl'],
+    'Alternate arms with each curl — 1 rep right, 1 rep left, repeat until you reach 4–6 reps per arm.'),
+  ex('Triceps Pressdown', 2, [w(1, '4–6', '10', '0 min')],
+    ['Cable Triceps Kickback', 'DB Triceps Kickback'],
+    'Focus on squeezing your triceps to move the weight.')
 ];
+
+// Lower alternates: odd weeks (W1, W3) = Hack Squat primary; even weeks (W2, W4) = Deadlift primary.
+// W3 Hack Squat uses RPE 9–10; all other primaries use 8–9.
+function p2Lower(week) {
+  var primary;
+  if (week % 2 === 1) {
+    var hackRpe = week === 3 ? '9–10' : '8–9';
+    primary = ex('Hack Squat', 4, [w(2, '4–6', hackRpe, '~3–5 min')],
+      ['Machine Squat', 'Bulgarian Split Squat'],
+      'Allow your knees to come forward (past your toes), focus the tension on your quads.');
+  } else {
+    primary = ex('Deadlift', 4, [w(2, '4–6', '8–9', '~3–5 min')],
+      ['Trap Bar Deadlift', 'Barbell Hip Thrust'],
+      'Can pull sumo or conventional, go with whatever variation you are stronger with.');
+  }
+  return [
+    primary,
+    ex('Dumbbell Walking Lunge', 3, [w(2, '4–6', '10', '~3–4 min')],
+      ['DB Step-Up', 'Goblet Squat'],
+      'Do 4–6 reps with each leg (8–12 total strides). Straps may be helpful if grip becomes limiting.'),
+    ex('Seated Leg Curl', 2, [w(2, '4–6', '10', '~2–3 min')],
+      ['Lying Leg Curl', 'Nordic Ham Curl'],
+      'Focus on squeezing your hamstrings to move the weight.'),
+    ex('Standing Calf Raise', 2, [w(2, '6–8', '10', '~2–3 min')],
+      ['Seated Calf Raise', 'Leg Press Toe Press'],
+      'Press all the way up to your toes, stretch your calves at the bottom, no bounce.'),
+    ex('Decline Plate-Weighted Crunch', 2, [w(2, '6–8', '10', '~2–3 min')],
+      ['Cable Crunch', 'Machine Crunch'],
+      'Hold a plate or DB to your chest and crunch hard.')
+  ];
+}
 
 // ── Phase 3 — Supercompensation (3 weeks) ──
 // Weeks 1 & 2 identical; Week 3 = full deload
@@ -288,15 +330,15 @@ var P3_LEGS_BASE = [
   ex('Dumbbell RDL', 1, [w(3, '20', '9', '~2–3 min')],
     ['Barbell RDL', '45° Hyperextension'],
     'Emphasize hamstring stretch, prevent lower back rounding.'),
-  ex('Reverse Lunge', 1, [w(3, '10/leg', '9', '~2–3 min')],
+  ex('Walking Lunge', 1, [w(3, '10', '9', '~2–3 min')],
     ['DB Step-Up', 'Goblet Squat'],
     'Medium strides, minimize push-off.'),
   ex('SLOW Seated Leg Curl (3s up, 3s down)', 1, [w(3, '8', '10', '~1–2 min')],
     ['Lying Leg Curl', 'Nordic Ham Curl'],
     '3 seconds positive, 3 seconds negative.'),
-  ex('Standing Calf Raise', 1, [w(3, '20', '10', '~1–2 min')],
-    ['Seated Calf Raise', 'Leg Press Toe Press'],
-    'Full range, stretch at bottom.'),
+  ex('Leg Press Toe Press', 1, [w(3, '20', '10', '~1–2 min')],
+    ['Seated Calf Raise', 'Standing Calf Raise'],
+    'Press all the way up to your toes, stretch your calves at the bottom, don\'t bounce.'),
   ex('LLPT Plank', 0, [w(3, '20 reps', '10', '~1–2 min')],
     ['Ab Wheel Rollout', 'Plank'],
     'Squeeze glutes, elbows under eyes.')
@@ -351,28 +393,49 @@ var P3_PULL_BASE = [
     [], 'Hold bicep stretch at ~7/10 intensity.')
 ];
 
-var P3_FB_BASE = [
-  ex('Deadlift', 4, [w(2, '8', '9', '~3–4 min')],
-    ['Trap Bar Deadlift', 'Barbell Hip Thrust'],
-    'Brace lats, chest tall, pull the slack out.'),
-  ex('Bench Press — Top Set', 4, [w(1, '2–4', '8–9', '~3–4 min')],
-    ['Bench Press', 'Machine Chest Press'],
-    'Comfortable arch, pause on chest.'),
-  ex('Bench Press — Back-Off AMRAP', 0, [w(1, 'AMRAP (~60% of top set)', '10', '~3–4 min')],
-    ['Bench Press', 'Machine Chest Press'],
-    'Use ~60% of top set load, AMRAP. Aim 10–20+ reps. Use spotter + safety bars.'),
-  ex('Pull-Up — Cluster Sets', 2, [w(6, '3', '7–8', '15 sec between clusters')],
+var P3_UPPER_BASE = [
+  ex('Bench Press (Top Set)', 3, [w(1, '2–4', '8–9', '~3–4 min')],
+    ['DB Bench Press', 'Machine Chest Press'],
+    'Set up a comfortable arch, quick pause on the chest and explode up on each rep.'),
+  ex('Bench Press (Back-Off AMRAP)', 0, [w(1, 'AMRAP', '10', '~3–4 min')],
+    ['DB Bench Press', 'Machine Chest Press'],
+    'Use ~60% of your top set weight. Aim for 10–20+ reps. Use a spotter and safety bars!'),
+  ex('Pull-Up', 2, [w(6, '3', '7–8', '~15 sec')],
     ['Lat Pulldown', 'Machine Pulldown'],
-    '6 cluster sets: 3 reps, rest 15s, repeat 6×. Smooth form.'),
-  ex('Leg Press', 3, [w(2, '20', '9', '~2–3 min')],
-    ['Goblet Squat', 'Reverse Lunge'],
-    'Medium-width feet, don\'t let lower back round.'),
-  ex('Wide-Grip Cable Row — Cluster Sets', 2, [w(10, '3', '7–8', '15 sec between clusters')],
-    ['Wide-Grip Machine Row', 'Wide-Grip T-Bar Row'],
-    '10 cluster sets: 3 reps, rest 15s, repeat 10×. Keep form tight.'),
+    '6 cluster sets: 3 reps, rest 15s, repeat 6×. Keep form smooth and controlled.'),
   ex('Standing DB Arnold Press', 2, [w(3, '15', '9', '~2–3 min')],
     ['Seated DB Shoulder Press', 'Machine Shoulder Press'],
-    'Elbows in front, rotate palms forward as you press.')
+    'Start with elbows in front, palms facing in. Rotate so palms face forward as you press.'),
+  ex('Wide-Grip Cable Row', 2, [w(10, '3', '7–8', '~15 sec')],
+    ['Wide-Grip Machine Row', 'Wide-Grip T-Bar Row'],
+    '10 cluster sets: 3 reps, rest 15s, repeat 10×. Keep form tight.'),
+  ex('Triceps Pressdown', 1, [w(3, '20', '10', '~1–2 min')],
+    ['Cable Triceps Kickback', 'DB Triceps Kickback'],
+    'Focus on squeezing your triceps to move the weight.'),
+  ex('Bayesian Cable Curl', 1, [w(3, '20', '10', '~1–2 min')],
+    ['DB Incline Curl', 'DB Curl'],
+    'Keep elbow behind torso throughout. Squeeze your bicep. Sets are per arm.')
+];
+
+var P3_LOWER_BASE = [
+  ex('Deadlift', 3, [w(2, '8', '9', '~3–4 min')],
+    ['Trap Bar Deadlift', 'Barbell Hip Thrust'],
+    'Brace your lats, chest tall, pull the slack out of the bar before lifting.'),
+  ex('Leg Press', 2, [w(2, '20', '9', '~2–3 min')],
+    ['Goblet Squat', 'Walking Lunge'],
+    'Medium width feet placement, don\'t allow your lower back to round.'),
+  ex('Leg Extension', 1, [w(5, '20', '10', '~1–2 min')],
+    ['DB Step-Up', 'Goblet Squat'],
+    'Focus on squeezing your quads to make the weight move.'),
+  ex('Lying Leg Curl', 1, [w(3, '20', '10', '~1–2 min')],
+    ['Seated Leg Curl', 'Nordic Ham Curl'],
+    'Focus on squeezing your hamstrings to make the weight move.'),
+  ex('Seated Calf Raise', 1, [w(3, '20', '10', '~1–2 min')],
+    ['Standing Calf Raise', 'Leg Press Toe Press'],
+    'Press all the way up to your toes, stretch your calves at the bottom, don\'t bounce.'),
+  ex('Corpse Crunch', 0, [w(3, '20', '10', '~1–2 min')],
+    ['Plate-Weighted Crunch', 'Cable Crunch'],
+    'Clear your upper back off the floor, hold 1–2 seconds, don\'t yank with your neck.')
 ];
 
 // Phase 3 Week 3 — Full Deload
@@ -380,9 +443,9 @@ var P3_W3 = {
   Legs: [
     ex('Front Squat', 3, [w(2, '10', '6', '~2–3 min')], ['High-Bar Box Squat', 'Goblet Squat'], 'Stay light, keep torso upright.'),
     ex('Dumbbell RDL', 1, [w(2, '12', '6', '~2–3 min')], ['Barbell RDL', '45° Hyperextension']),
-    ex('Reverse Lunge', 1, [w(2, '8/leg', '6', '~2–3 min')], ['DB Step-Up', 'Goblet Squat']),
+    ex('Walking Lunge', 1, [w(2, '8', '6', '~2–3 min')], ['DB Step-Up', 'Goblet Squat']),
     ex('SLOW Seated Leg Curl (3s up, 3s down)', 1, [w(2, '8', '7', '~1–2 min')], ['Lying Leg Curl', 'Nordic Ham Curl']),
-    ex('Standing Calf Raise', 1, [w(2, '12', '7', '~1–2 min')], ['Seated Calf Raise', 'Leg Press Toe Press']),
+    ex('Leg Press Toe Press', 1, [w(2, '12', '7', '~1–2 min')], ['Seated Calf Raise', 'Standing Calf Raise']),
     ex('LLPT Plank', 0, [w(1, '30s hold', '7', '~1–2 min')], ['Ab Wheel Rollout', 'Plank'])
   ],
   Push: [
@@ -404,49 +467,99 @@ var P3_W3 = {
     ex('A1: EZ-Bar Modified Bicep 21s', 0, [w(1, '21', '7', '0 min — superset')], ['DB Curl 21s', 'Cable Curl 21s']),
     ex('A2: Bicep Static Stretch', 0, [w(1, '30s hold', 'N/A', '0 min — superset')], [])
   ],
-  'Full Body': [
-    ex('Deadlift', 4, [w(1, '8', '6', '~3–4 min')], ['Trap Bar Deadlift', 'Barbell Hip Thrust']),
-    ex('DB Bench Press', 4, [w(1, '2–4', '6', '~3–4 min')], ['Bench Press', 'Machine Chest Press']),
-    ex('Pull-Up — Cluster Sets', 2, [w(4, '3', '6', '15 sec between clusters')], ['Lat Pulldown', 'Machine Pulldown']),
-    ex('Leg Press', 3, [w(1, '12', '6', '~2–3 min')], ['Goblet Squat', 'Reverse Lunge']),
-    ex('Wide-Grip Cable Row — Cluster Sets', 2, [w(6, '3', '6', '15 sec between clusters')], ['Wide-Grip Machine Row', 'Wide-Grip T-Bar Row']),
-    ex('Standing DB Arnold Press', 2, [w(2, '12', '6', '~2–3 min')], ['Seated DB Shoulder Press', 'Machine Shoulder Press'])
+  Upper: [
+    ex('Bench Press', 3, [w(1, '2–4', '6', '~3–4 min')],
+      ['DB Bench Press', 'Machine Chest Press'],
+      'Set up a comfortable arch, quick pause on the chest and explode up on each rep.'),
+    ex('Pull-Up', 2, [w(4, '3', '6', '~15 sec')],
+      ['Lat Pulldown', 'Machine Pulldown'],
+      '4 cluster sets: 3 reps, rest 15s. Keep form smooth and controlled.'),
+    ex('Standing DB Arnold Press', 2, [w(2, '12', '6', '~2–3 min')],
+      ['Seated DB Shoulder Press', 'Machine Shoulder Press'],
+      'Start with elbows in front, palms facing in. Rotate so palms face forward as you press.'),
+    ex('Wide-Grip Cable Row', 2, [w(6, '3', '6', '~15 sec')],
+      ['Wide-Grip Machine Row', 'Wide-Grip T-Bar Row'],
+      '6 cluster sets: 3 reps, rest 15s. Keep form tight.'),
+    ex('Triceps Pressdown', 1, [w(2, '15', '7', '~1–2 min')],
+      ['Cable Triceps Kickback', 'DB Triceps Kickback'],
+      'Focus on squeezing your triceps to move the weight.'),
+    ex('Bayesian Cable Curl', 1, [w(2, '15', '7', '~1–2 min')],
+      ['DB Incline Curl', 'DB Curl'],
+      'Keep elbow behind torso throughout. Squeeze your bicep. Sets are per arm.')
+  ],
+  Lower: [
+    ex('Deadlift', 3, [w(1, '8', '6', '~3–4 min')],
+      ['Trap Bar Deadlift', 'Barbell Hip Thrust'],
+      'Brace your lats, chest tall, pull the slack out of the bar before lifting.'),
+    ex('Leg Press', 2, [w(1, '12', '6', '~2–3 min')],
+      ['Goblet Squat', 'Walking Lunge'],
+      'Medium width feet placement, don\'t allow your lower back to round.'),
+    ex('Leg Extension', 1, [w(2, '15', '7', '~1–2 min')],
+      ['DB Step-Up', 'Goblet Squat'],
+      'Focus on squeezing your quads to make the weight move.'),
+    ex('Lying Leg Curl', 1, [w(2, '15', '7', '~1–2 min')],
+      ['Seated Leg Curl', 'Nordic Ham Curl'],
+      'Focus on squeezing your hamstrings to make the weight move.'),
+    ex('Seated Calf Raise', 1, [w(2, '15', '7', '~1–2 min')],
+      ['Standing Calf Raise', 'Leg Press Toe Press'],
+      'Press all the way up to your toes, stretch your calves at the bottom, don\'t bounce.'),
+    ex('Corpse Crunch', 0, [w(1, '15', '7', '~1–2 min')],
+      ['Plate-Weighted Crunch', 'Cable Crunch'],
+      'Clear your upper back off the floor, hold 1–2 seconds, don\'t yank with your neck.')
   ]
 };
 
 // ── Program resolver ──
-var DAYS = ['Legs', 'Push', 'Pull', 'Full Body'];
+var PHASE_DAYS = ['Push', 'Pull', 'Legs', 'Upper', 'Lower'];
 var PHASES = [
-  { name: 'Phase 1 — Hypertrophy', shortName: 'P1 Hypertrophy', weeks: 6, note: 'Week 6 is a semi-deload.' },
-  { name: 'Phase 2 — Maximum Effort', shortName: 'P2 Max Effort', weeks: 4, note: 'FB alternates: odd weeks = Hack Squat, even weeks = Deadlift.' },
-  { name: 'Phase 3 — Supercompensation', shortName: 'P3 Supercomp', weeks: 3, note: 'Week 3 is a full deload.' }
+  { name: 'Phase 1 — Hypertrophy', shortName: 'P1 Hypertrophy', weeks: 6, days: PHASE_DAYS, note: 'Week 6 is a semi-deload.' },
+  { name: 'Phase 2 — Maximum Effort', shortName: 'P2 Max Effort', weeks: 4, days: PHASE_DAYS, note: 'Lower alternates: odd weeks = Hack Squat, even weeks = Deadlift.' },
+  { name: 'Phase 3 — Supercompensation', shortName: 'P3 Supercomp', weeks: 3, days: PHASE_DAYS, note: 'Week 3 is a full deload.' }
 ];
 
+function getDays(phase) { return PHASES[phase].days; }
+
+function stubDay(dayName, phaseLabel) {
+  return [
+    ex('Template coming soon — ' + dayName, 0, [w(1, '—', 'N/A', '—')],
+      [], phaseLabel + ' ' + dayName + ' template will be added when the phase doc is provided. Add exercises manually below.')
+  ];
+}
+
 function getProgramDay(phase, week, dayIdx) {
-  var day = DAYS[dayIdx];
+  var day = PHASES[phase].days[dayIdx];
   if (phase === 0) {
     if (week === 6) return deepCopy(P1_W6[day]);
-    return deepCopy(phase === 0 ? getP1Day(day, week) : []);
+    return deepCopy(getP1Day(day, week));
   }
   if (phase === 1) {
-    if (day === 'Full Body') return deepCopy(week % 2 !== 0 ? P2_FB_A : P2_FB_B);
-    if (day === 'Legs') return deepCopy(P2_LEGS);
-    if (day === 'Push') return deepCopy(P2_PUSH);
-    return deepCopy(P2_PULL);
+    if (day === 'Push')  return deepCopy(P2_PUSH);
+    if (day === 'Pull')  return deepCopy(P2_PULL);
+    if (day === 'Legs')  return deepCopy(P2_LEGS);
+    if (day === 'Upper') return deepCopy(P2_UPPER);
+    if (day === 'Lower') return deepCopy(p2Lower(week));
+    return stubDay(day, 'Phase 2');
   }
   // Phase 3
-  if (week === 3) return deepCopy(P3_W3[day]);
-  if (day === 'Legs') return deepCopy(P3_LEGS_BASE);
-  if (day === 'Push') return deepCopy(P3_PUSH_BASE);
-  if (day === 'Pull') return deepCopy(P3_PULL_BASE);
-  return deepCopy(P3_FB_BASE);
+  if (week === 3) {
+    if (P3_W3[day]) return deepCopy(P3_W3[day]);
+    return stubDay(day, 'Phase 3 deload');
+  }
+  if (day === 'Legs')  return deepCopy(P3_LEGS_BASE);
+  if (day === 'Push')  return deepCopy(P3_PUSH_BASE);
+  if (day === 'Pull')  return deepCopy(P3_PULL_BASE);
+  if (day === 'Upper') return deepCopy(P3_UPPER_BASE);
+  if (day === 'Lower') return deepCopy(P3_LOWER_BASE);
+  return stubDay(day, 'Phase 3');
 }
 
 function getP1Day(day, week) {
-  if (day === 'Legs') return p1Legs(week);
-  if (day === 'Push') return p1Push(week);
-  if (day === 'Pull') return p1Pull(week);
-  return p1FullBody(week);
+  if (day === 'Push')  return p1Push(week);
+  if (day === 'Pull')  return p1Pull(week);
+  if (day === 'Legs')  return p1Legs(week);
+  if (day === 'Upper') return p1Upper(week);
+  if (day === 'Lower') return p1Lower(week);
+  return [];
 }
 
 function deepCopy(obj) {
@@ -458,9 +571,10 @@ var STORAGE_KEY = 'gym-tracker-v2';
 var state = {
   phase: 0,   // 0–2
   week: 1,    // 1–N
-  dayIdx: 0,  // 0–3
+  dayIdx: 0,  // 0 .. (phase.days.length - 1)
   sessions: {},
-  theme: 'dark'
+  theme: 'dark',
+  migrated_v3: false
 };
 
 function loadState() {
@@ -468,6 +582,32 @@ function loadState() {
     var raw = localStorage.getItem(STORAGE_KEY);
     if (raw) Object.assign(state, JSON.parse(raw));
   } catch (e) { }
+  migrateTo5DaySplit();
+  // Clamp cursor in case saved state predates new day layout
+  if (state.phase < 0 || state.phase >= PHASES.length) state.phase = 0;
+  if (state.dayIdx < 0 || state.dayIdx >= PHASES[state.phase].days.length) state.dayIdx = 0;
+}
+
+// One-time migration: old 4-day split (Legs/Push/Pull/Full Body) → new 5-day split (Push/Pull/Legs/Upper/Lower).
+// Re-keys sessions by day name; Full Body sessions are dropped.
+function migrateTo5DaySplit() {
+  if (state.migrated_v3) return;
+  var oldOrder = ['Legs', 'Push', 'Pull', 'Full Body'];
+  var newIdx = { Push: 0, Pull: 1, Legs: 2, Upper: 3, Lower: 4 };
+  var migrated = {};
+  Object.keys(state.sessions || {}).forEach(function (key) {
+    var s = state.sessions[key];
+    var dayName = s.day || oldOrder[s.dayIdx];
+    if (!(dayName in newIdx)) return; // drop Full Body / unknown
+    var ndi = newIdx[dayName];
+    s.dayIdx = ndi;
+    s.day = dayName;
+    migrated[s.phase + '-' + s.week + '-' + ndi] = s;
+  });
+  state.sessions = migrated;
+  state.dayIdx = 0;
+  state.migrated_v3 = true;
+  saveState();
 }
 
 function saveState() {
@@ -505,7 +645,7 @@ function newSession(phase, week, dayIdx) {
   });
   return {
     phase: phase, week: week, dayIdx: dayIdx,
-    day: DAYS[dayIdx],
+    day: PHASES[phase].days[dayIdx],
     startedAt: null,
     completedAt: null,
     exercises: exercises
@@ -524,7 +664,8 @@ function currentSession() {
   return getSession(state.phase, state.week, state.dayIdx);
 }
 
-// Find the best weight logged for an exercise (by origName) in any prior session
+// Find the best weight logged for an exercise (by origName) in any prior session.
+// Drop-set weights like "27.5/15" are ranked by their first number; the full string is kept for display.
 function findPriorBest(origName, currentKey) {
   var keys = Object.keys(state.sessions).sort();
   var best = null;
@@ -539,7 +680,7 @@ function findPriorBest(origName, currentKey) {
         if (!s.done || !s.weight) continue;
         var w2 = parseFloat(s.weight);
         if (!isNaN(w2) && (!best || w2 > best.weight)) {
-          best = { weight: w2, reps: s.reps, phase: session.phase, week: session.week };
+          best = { weight: w2, display: String(s.weight), reps: s.reps, phase: session.phase, week: session.week };
         }
       }
     }
@@ -557,7 +698,7 @@ function allBests() {
       ex2.sets.forEach(function (s) {
         if (!s.done || !s.weight) return;
         var w2 = parseFloat(s.weight);
-        if (!isNaN(w2) && (!best || w2 > best.weight)) best = { weight: w2, reps: s.reps };
+        if (!isNaN(w2) && (!best || w2 > best.weight)) best = { weight: w2, display: String(s.weight), reps: s.reps };
       });
       if (!best) return;
       if (!map[ex2.origName]) map[ex2.origName] = [];
@@ -631,7 +772,8 @@ function renderTodayNav() {
   var center = el('div', { class: 'nav-center' });
   center.appendChild(el('div', { class: 'nav-week' }, 'Week ' + state.week + ' / ' + PHASES[state.phase].weeks));
   var dayRow = el('div', { class: 'day-chips' });
-  DAYS.forEach(function (d, i) {
+  var phaseDays = PHASES[state.phase].days;
+  phaseDays.forEach(function (d, i) {
     var isComplete = false;
     var key = sessionKey(state.phase, state.week, i);
     if (state.sessions[key] && state.sessions[key].completedAt) isComplete = true;
@@ -710,7 +852,7 @@ function renderTodaySession() {
     var prior = findPriorBest(exercise.origName, key);
     if (prior) {
       card.appendChild(el('div', { class: 'prior-best' },
-        'Previous best: ' + prior.weight + ' kg \u00D7 ' + prior.reps +
+        'Previous best: ' + (prior.display || prior.weight) + ' kg \u00D7 ' + prior.reps +
         ' (P' + (prior.phase + 1) + ' W' + prior.week + ')'));
     }
 
@@ -751,8 +893,10 @@ function renderTodaySession() {
       row.appendChild(targetWrap);
 
       var wInput = el('input', {
-        type: 'number', inputmode: 'decimal', class: 'set-input',
-        placeholder: prior ? String(prior.weight) : '—',
+        type: 'text', inputmode: 'text', class: 'set-input',
+        autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false',
+        pattern: '[0-9./]*',
+        placeholder: prior ? (prior.display || String(prior.weight)) : '—',
         value: set.weight,
         onchange: function () { set.weight = wInput.value; saveState(); }
       });
@@ -929,11 +1073,11 @@ function renderProgram() {
   c.innerHTML = '';
   var ph = PHASES[progPhaseIdx];
   c.appendChild(el('h2', { class: 'prog-h2' }, ph.name));
-  c.appendChild(el('p', { class: 'prog-meta' }, ph.weeks + ' weeks · 4 days/week'));
+  c.appendChild(el('p', { class: 'prog-meta' }, ph.weeks + ' weeks · ' + ph.days.length + ' days/week'));
   if (ph.note) c.appendChild(el('p', { class: 'prog-note' }, ph.note));
 
   // Show week 1 as representative (or note variation)
-  DAYS.forEach(function (day, di) {
+  ph.days.forEach(function (day, di) {
     var exercises = getProgramDay(progPhaseIdx, 1, di);
     var sec = el('div', { class: 'prog-day' });
     sec.appendChild(el('h3', { class: 'prog-day-name' }, day));
@@ -977,12 +1121,12 @@ function renderHistory() {
     card.appendChild(el('div', { class: 'hist-name' }, name));
     var overallBest = entries.reduce(function (b, e) { return e.best.weight > b.best.weight ? e : b; });
     card.appendChild(el('div', { class: 'hist-best' },
-      'Best: ' + overallBest.best.weight + ' kg × ' + overallBest.best.reps));
+      'Best: ' + (overallBest.best.display || overallBest.best.weight) + ' kg × ' + overallBest.best.reps));
     var list = el('div', { class: 'hist-list' });
     entries.forEach(function (e) {
       var row = el('div', { class: 'hist-row' });
       row.appendChild(el('span', { class: 'hist-tag' }, 'P' + (e.phase + 1) + ' W' + e.week + ' · ' + e.day));
-      row.appendChild(el('span', { class: 'hist-val' }, e.best.weight + ' kg × ' + e.best.reps));
+      row.appendChild(el('span', { class: 'hist-val' }, (e.best.display || e.best.weight) + ' kg × ' + e.best.reps));
       list.appendChild(row);
     });
     card.appendChild(list);
@@ -995,7 +1139,7 @@ function renderSettings() {
   var total = 0, done = 0;
   PHASES.forEach(function (ph, pi) {
     for (var w2 = 1; w2 <= ph.weeks; w2++) {
-      for (var d = 0; d < DAYS.length; d++) {
+      for (var d = 0; d < ph.days.length; d++) {
         total++;
         var s = state.sessions[sessionKey(pi, w2, d)];
         if (s && s.completedAt) done++;
@@ -1040,7 +1184,14 @@ function importData(file) {
   var r = new FileReader();
   r.onload = function () {
     try {
-      Object.assign(state, JSON.parse(r.result));
+      var parsed = JSON.parse(r.result);
+      Object.assign(state, parsed);
+      // Re-run migration in case the imported backup predates the 5-day split.
+      if (parsed.migrated_v3 !== true) {
+        state.migrated_v3 = false;
+        migrateTo5DaySplit();
+      }
+      if (state.dayIdx < 0 || state.dayIdx >= PHASES[state.phase].days.length) state.dayIdx = 0;
       saveState(); applyTheme(); showTab('today');
     } catch (e) { alert('Import failed: ' + e.message); }
   };
