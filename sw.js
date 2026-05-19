@@ -1,4 +1,4 @@
-var CACHE_NAME = 'gym-tracker-v2';
+var CACHE_NAME = 'gym-tracker-v4';
 var ASSETS = [
   './',
   './index.html',
