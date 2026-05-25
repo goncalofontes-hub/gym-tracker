@@ -670,8 +670,32 @@ function getSession(phase, week, dayIdx) {
   var key = sessionKey(phase, week, dayIdx);
   if (!state.sessions[key]) {
     state.sessions[key] = newSession(phase, week, dayIdx);
+    return state.sessions[key];
   }
-  return state.sessions[key];
+  var session = state.sessions[key];
+  // Patch existing sessions that predate warmup carryover
+  if (week > 1) {
+    var prevSession = state.sessions[sessionKey(phase, week - 1, dayIdx)];
+    if (prevSession) {
+      var patched = false;
+      session.exercises.forEach(function (ex) {
+        if (ex.sets.some(function (s) { return s.warmup; })) return;
+        var prevEx = null;
+        for (var pi = 0; pi < prevSession.exercises.length; pi++) {
+          if (prevSession.exercises[pi].origName === ex.origName) { prevEx = prevSession.exercises[pi]; break; }
+        }
+        if (!prevEx) return;
+        var prevWarmups = prevEx.sets.filter(function (s) { return s.warmup; });
+        if (prevWarmups.length === 0) return;
+        ex.sets = prevWarmups.map(function (s) {
+          return { targetReps: s.targetReps, rpe: s.rpe, rest: s.rest, weight: '', reps: '', done: false, warmup: true };
+        }).concat(ex.sets);
+        patched = true;
+      });
+      if (patched) saveState();
+    }
+  }
+  return session;
 }
 
 function currentSession() {
