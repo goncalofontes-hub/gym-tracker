@@ -20,6 +20,7 @@
       <button class="tab" data-tab="program">Program</button>
       <button class="tab" data-tab="history">History</button>
       <button class="tab" data-tab="settings">Settings</button>
+      <button class="tab" data-tab="qr">QR</button>
     </nav>
 
     <!-- Today -->
@@ -67,7 +68,15 @@
       <input type="file" id="import-file" accept=".json" class="hidden">
     </main>
 
+    <!-- QR Code -->
+    <main id="view-qr" class="view">
+      <div id="qr-body"></div>
+    </main>
+
   </div>
+
+  <!-- QR file picker (hidden) -->
+  <input type="file" id="qr-file" accept="image/*" class="hidden">
 
   <!-- Edit exercise modal -->
   <div id="modal-edit-ex" class="modal hidden">

@@ -741,6 +741,7 @@ function showTab(name) {
   if (name === 'program') renderProgram();
   if (name === 'history') renderHistory();
   if (name === 'settings') renderSettings();
+  if (name === 'qr') renderQR();
 }
 
 // ── Today view ──
@@ -866,10 +867,37 @@ function renderTodaySession() {
     th.appendChild(el('div', { class: 'col-done' }, ''));
     setsTable.appendChild(th);
 
+    var warmupCounter = 0, workingCounter = 0;
     exercise.sets.forEach(function (set, setIdx) {
-      var row = el('div', { class: 'sets-row' + (set.done ? ' set-done' : '') });
+      var isWarmup = !!set.warmup;
+      if (isWarmup) warmupCounter++; else workingCounter++;
+      var label = isWarmup ? ('W' + warmupCounter) : String(workingCounter);
+      var row = el('div', { class: 'sets-row' + (set.done ? ' set-done' : '') + (isWarmup ? ' set-warmup' : '') });
 
-      row.appendChild(el('div', { class: 'col-set' }, String(setIdx + 1)));
+      // col-set: ▲ / label / ▼
+      var colSet = el('div', { class: 'col-set' });
+      colSet.appendChild(el('button', {
+        class: 'move-btn' + (setIdx === 0 ? ' invisible' : ''),
+        'aria-label': 'Move up',
+        onclick: function () {
+          var tmp = exercise.sets[setIdx - 1];
+          exercise.sets[setIdx - 1] = exercise.sets[setIdx];
+          exercise.sets[setIdx] = tmp;
+          saveState(); renderTodaySession();
+        }
+      }, '▲'));
+      colSet.appendChild(el('span', { class: 'set-num' + (isWarmup ? ' warmup-num' : '') }, label));
+      colSet.appendChild(el('button', {
+        class: 'move-btn' + (setIdx === exercise.sets.length - 1 ? ' invisible' : ''),
+        'aria-label': 'Move down',
+        onclick: function () {
+          var tmp = exercise.sets[setIdx + 1];
+          exercise.sets[setIdx + 1] = exercise.sets[setIdx];
+          exercise.sets[setIdx] = tmp;
+          saveState(); renderTodaySession();
+        }
+      }, '▼'));
+      row.appendChild(colSet);
 
       // Editable target (reps + RPE)
       var targetWrap = el('div', { class: 'col-target' });
@@ -939,11 +967,21 @@ function renderTodaySession() {
           targetReps: last ? last.targetReps : '—',
           rpe: last ? last.rpe : '—',
           rest: last ? last.rest : '—',
-          weight: '', reps: '', done: false
+          weight: '', reps: '', done: false, warmup: false
         });
         saveState(); renderTodaySession();
       }
     }, '+ set'));
+    setControls.appendChild(el('button', {
+      class: 'set-ctrl-btn warmup',
+      onclick: function () {
+        exercise.sets.push({
+          targetReps: '—', rpe: 'N/A', rest: '—',
+          weight: '', reps: '', done: false, warmup: true
+        });
+        saveState(); renderTodaySession();
+      }
+    }, '+ warmup'));
     if (exercise.sets.length > 1) {
       setControls.appendChild(el('button', {
         class: 'set-ctrl-btn danger',
@@ -974,7 +1012,8 @@ function renderTodaySession() {
 
   // Finish button
   var allDone = session.exercises.length > 0 && session.exercises.every(function (ex2) {
-    return ex2.sets.every(function (s) { return s.done; });
+    var working = ex2.sets.filter(function (s) { return !s.warmup; });
+    return working.length === 0 || working.every(function (s) { return s.done; });
   });
   // Add exercise button
   c.appendChild(el('button', {
@@ -1206,6 +1245,27 @@ function applyTheme() {
   if (meta) meta.setAttribute('content', light ? '#f0f0f5' : '#111114');
 }
 
+// ── QR Code (gym access) ──
+var QR_KEY = 'gym-qr-image';
+function renderQR() {
+  var c = $('#qr-body');
+  c.innerHTML = '';
+  var stored = localStorage.getItem(QR_KEY);
+  if (stored) {
+    c.appendChild(el('img', { class: 'qr-image', src: stored, alt: 'QR Code' }));
+    var btnRow = el('div', { class: 'qr-btn-row' });
+    btnRow.appendChild(el('button', { class: 'btn-secondary', onclick: function () { $('#qr-file').click(); } }, 'Change image'));
+    btnRow.appendChild(el('button', { class: 'btn-danger', onclick: function () { localStorage.removeItem(QR_KEY); renderQR(); } }, 'Remove'));
+    c.appendChild(btnRow);
+  } else {
+    var empty = el('div', { class: 'qr-empty' });
+    empty.appendChild(el('div', { class: 'qr-empty-icon' }, '📷'));
+    empty.appendChild(el('p', {}, 'Pick your gym QR code from your gallery. Stored only on this device — never uploaded.'));
+    empty.appendChild(el('button', { class: 'btn-primary', onclick: function () { $('#qr-file').click(); } }, 'Choose image'));
+    c.appendChild(empty);
+  }
+}
+
 // ── Init ──
 function init() {
   loadState();
@@ -1246,6 +1306,14 @@ function init() {
     } else { location.reload(true); }
   });
 
+  $('#qr-file').addEventListener('change', function () {
+    var file = this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (ev) { localStorage.setItem(QR_KEY, ev.target.result); renderQR(); };
+    reader.readAsDataURL(file);
+    this.value = '';
+  });
   $('#btn-export').addEventListener('click', exportData);
   $('#btn-import').addEventListener('click', function () { $('#import-file').click(); });
   $('#import-file').addEventListener('change', function () { if (this.files[0]) importData(this.files[0]); });
