@@ -620,6 +620,7 @@ function sessionKey(phase, week, dayIdx) {
 
 function newSession(phase, week, dayIdx) {
   var template = getProgramDay(phase, week, dayIdx);
+  var prevSession = week > 1 ? state.sessions[sessionKey(phase, week - 1, dayIdx)] : null;
   var exercises = template.map(function (tmpl) {
     var sets = [];
     tmpl.work.forEach(function (prescription) {
@@ -630,10 +631,23 @@ function newSession(phase, week, dayIdx) {
           rest: prescription.rest,
           weight: '',
           reps: '',
-          done: false
+          done: false,
+          warmup: false
         });
       }
     });
+    if (prevSession) {
+      var prevEx = null;
+      for (var pi = 0; pi < prevSession.exercises.length; pi++) {
+        if (prevSession.exercises[pi].origName === tmpl.origName) { prevEx = prevSession.exercises[pi]; break; }
+      }
+      if (prevEx) {
+        var carriedWarmups = prevEx.sets.filter(function (s) { return s.warmup; }).map(function (s) {
+          return { targetReps: s.targetReps, rpe: s.rpe, rest: s.rest, weight: '', reps: '', done: false, warmup: true };
+        });
+        sets = carriedWarmups.concat(sets);
+      }
+    }
     return {
       origName: tmpl.origName,
       name: tmpl.name,
