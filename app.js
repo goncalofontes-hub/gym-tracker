@@ -620,7 +620,6 @@ function sessionKey(phase, week, dayIdx) {
 
 function newSession(phase, week, dayIdx) {
   var template = getProgramDay(phase, week, dayIdx);
-  var prevSession = week > 1 ? state.sessions[sessionKey(phase, week - 1, dayIdx)] : null;
   var exercises = template.map(function (tmpl) {
     var sets = [];
     tmpl.work.forEach(function (prescription) {
@@ -636,17 +635,11 @@ function newSession(phase, week, dayIdx) {
         });
       }
     });
-    if (prevSession) {
-      var prevEx = null;
-      for (var pi = 0; pi < prevSession.exercises.length; pi++) {
-        if (prevSession.exercises[pi].origName === tmpl.origName) { prevEx = prevSession.exercises[pi]; break; }
-      }
-      if (prevEx) {
-        var carriedWarmups = prevEx.sets.filter(function (s) { return s.warmup; }).map(function (s) {
-          return { targetReps: s.targetReps, rpe: s.rpe, rest: s.rest, weight: '', reps: '', done: false, warmup: true };
-        });
-        sets = carriedWarmups.concat(sets);
-      }
+    var wDefs = state.warmups && state.warmups[tmpl.origName];
+    if (wDefs && wDefs.length > 0) {
+      sets = wDefs.map(function (w) {
+        return { targetReps: w.targetReps, rpe: w.rpe, rest: w.rest, weight: '', reps: '', done: false, warmup: true };
+      }).concat(sets);
     }
     return {
       origName: tmpl.origName,
@@ -673,27 +666,19 @@ function getSession(phase, week, dayIdx) {
     return state.sessions[key];
   }
   var session = state.sessions[key];
-  // Patch existing sessions that predate warmup carryover
-  if (week > 1) {
-    var prevSession = state.sessions[sessionKey(phase, week - 1, dayIdx)];
-    if (prevSession) {
-      var patched = false;
-      session.exercises.forEach(function (ex) {
-        if (ex.sets.some(function (s) { return s.warmup; })) return;
-        var prevEx = null;
-        for (var pi = 0; pi < prevSession.exercises.length; pi++) {
-          if (prevSession.exercises[pi].origName === ex.origName) { prevEx = prevSession.exercises[pi]; break; }
-        }
-        if (!prevEx) return;
-        var prevWarmups = prevEx.sets.filter(function (s) { return s.warmup; });
-        if (prevWarmups.length === 0) return;
-        ex.sets = prevWarmups.map(function (s) {
-          return { targetReps: s.targetReps, rpe: s.rpe, rest: s.rest, weight: '', reps: '', done: false, warmup: true };
-        }).concat(ex.sets);
-        patched = true;
-      });
-      if (patched) saveState();
-    }
+  // Patch existing sessions: prepend any warmup definitions not yet present
+  if (state.warmups) {
+    var patched = false;
+    session.exercises.forEach(function (ex) {
+      if (ex.sets.some(function (s) { return s.warmup; })) return;
+      var wDefs = state.warmups[ex.origName];
+      if (!wDefs || wDefs.length === 0) return;
+      ex.sets = wDefs.map(function (w) {
+        return { targetReps: w.targetReps, rpe: w.rpe, rest: w.rest, weight: '', reps: '', done: false, warmup: true };
+      }).concat(ex.sets);
+      patched = true;
+    });
+    if (patched) saveState();
   }
   return session;
 }
@@ -1013,8 +998,11 @@ function renderTodaySession() {
     setControls.appendChild(el('button', {
       class: 'set-ctrl-btn warmup',
       onclick: function () {
+        if (!state.warmups) state.warmups = {};
+        if (!state.warmups[exercise.origName]) state.warmups[exercise.origName] = [];
+        state.warmups[exercise.origName].push({ targetReps: 'W/U', rpe: 'N/A', rest: 'N/A' });
         exercise.sets.push({
-          targetReps: '—', rpe: 'N/A', rest: '—',
+          targetReps: 'W/U', rpe: 'N/A', rest: 'N/A',
           weight: '', reps: '', done: false, warmup: true
         });
         saveState(); renderTodaySession();
@@ -1024,7 +1012,11 @@ function renderTodaySession() {
       setControls.appendChild(el('button', {
         class: 'set-ctrl-btn danger',
         onclick: function () {
+          var removed = exercise.sets[exercise.sets.length - 1];
           exercise.sets.pop();
+          if (removed && removed.warmup && state.warmups && state.warmups[exercise.origName]) {
+            state.warmups[exercise.origName].pop();
+          }
           saveState(); renderTodaySession();
         }
       }, '− set'));
@@ -1307,6 +1299,20 @@ function renderQR() {
 // ── Init ──
 function init() {
   loadState();
+  if (!state.warmups) {
+    state.warmups = {};
+    Object.keys(state.sessions).sort().forEach(function (key) {
+      state.sessions[key].exercises.forEach(function (ex) {
+        var wSets = ex.sets.filter(function (s) { return s.warmup; });
+        if (wSets.length > 0) {
+          state.warmups[ex.origName] = wSets.map(function (s) {
+            return { targetReps: s.targetReps, rpe: s.rpe, rest: s.rest };
+          });
+        }
+      });
+    });
+    saveState();
+  }
   applyTheme();
 
   $$('.tab').forEach(function (t) {
